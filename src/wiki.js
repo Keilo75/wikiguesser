@@ -10,7 +10,7 @@ async function getRandomArticles() {
     // Get random article
     const response = await fetch(`${url}/random/summary`, {
       headers: {
-        'User-Agent': 'randompedia/0.1 (100PercentReal@gmx.net) node-fetch '
+        'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) fetch '
       }
     });
     let data;
@@ -62,5 +62,3 @@ function formatResponse(title, text) {
   return text;
 }
 
-
-exports.getRandomArticles = getRandomArticles;
