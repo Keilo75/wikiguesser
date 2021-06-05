@@ -3,6 +3,7 @@ const url = 'https://en.wikipedia.org/api/rest_v1/page';
 
 async function getRandomArticles() {      
   return formatResponse('Berowra Waters, New South Wales', 'Berowra Waters is an outer suburb of Northern Sydney, in the state of New South Wales, Australia. Berowra is located 40 kilometres north of the Sydney central business district, in the local government area of Hornsby Shire. Berowra Waters is north-west of the suburbs of Berowra Heights and west of Berowra.')
+  // Berowra Waters, New South Wales
   
   const articles = {
     text: '',
@@ -37,50 +38,45 @@ async function getRandomArticles() {
 
 }
 
+const censorString = '___';
+const specialChars = /[-&\/\\#,+()$~%.'":*?<>{}_]/g;
 function formatResponse(title, text) {
-  const forbiddenWords = title.split(' ');
+  // Remove special characters in title
+  const forbiddenWords = title.split(' ').map(string => string.replace(specialChars, '').toLowerCase());
 
-  // Remove every forbidden word
   for (forbiddenWord of forbiddenWords) {
-    // Loop through the text
-    const splittedText = text.split(' ');
-
-    for (word of splittedText) {
-      // Check if word is longer
-      let isForbidden;
-      if (forbiddenWord.replace(/[&\/\\#,+()$~%.'":*!?<>{}]/g, '').length <= word.replace(/[&\/\\#,+()$~%.'":*!?<>{}]/g, '').length) {
-        isForbidden = forbiddenWord.toLowerCase().replace(/[&\/\\#,+()$~%.'":*!?<>{}]/g, '').startsWith(word.replace(/[&\/\\#,+()$~%.'":*!?<>{}]/g, '').toLowerCase());
-      }   
-
-      // Edge cases
-      // Bueller's has to detect Bueller
-      // Arena should not detect 'a'
+    const splittedText = text.split(' ').map(word => {
+      // Check if word is already removed
+      if (word.startsWith(censorString)) return word;
       
-      if (!isForbidden) continue;
-      
-      const wordIndex = splittedText.indexOf(word);
-
-      // Handle commas and points
-      const specialCharacters = /[.:,;?!"']/;
-      const lastCharacter = word[word.length - 1];
-      const isPunctuationMark1 = lastCharacter?.match(specialCharacters);
-      
-      const firstCharacter = word[0];
-      const isPunctuationMark2 = firstCharacter.match(specialCharacters);
-      
-      // If word includes a forbidden word, replace it
-      splittedText[wordIndex] = (isPunctuationMark2 ? firstCharacter : '') + '___' + (isPunctuationMark1 ? lastCharacter : '');
-      
-      // Check if last word is already removed
-      if (splittedText[wordIndex - 1]?.includes('___')) splittedText[wordIndex] = (isPunctuationMark2 ? firstCharacter : '') + (isPunctuationMark1 ? lastCharacter : '');
-    
-    }
+      // Remove every word where the current forbidden word starts with it
+      // 'Worlds' will be removed when the forbidden word is 'World'
+      if (forbiddenWord.startsWith(word.toLowerCase().replace(specialChars, ''))) return removeWord(word);
+  
+      return word;
+    });
 
     text = splittedText.join(' ');
-    
   }
-
   return text;
+}
+
+function removeWord(word) {
+  word = word.split('')
+  // Remove all special characters
+  let filteredWord = word.filter(char => !char.match(specialChars));
+
+  // Find the index of the first and last non special characters
+  const firstCharIndex = word.indexOf(filteredWord[0]);
+  const lastCharIndex = word.indexOf(filteredWord[filteredWord.length - 1]);
+
+  // Remove all non special characters from the array
+  word.splice(firstCharIndex, lastCharIndex - firstCharIndex + 1)
+  
+  // Add the censored string back
+  word.splice(firstCharIndex, 0, censorString);
+
+  return word.join('');
 }
 
 exports.getRandomArticles = getRandomArticles;
