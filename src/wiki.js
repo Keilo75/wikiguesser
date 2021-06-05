@@ -52,6 +52,9 @@ function formatResponse(title, text) {
   // Remove special characters in title
   const forbiddenWords = title.replace('-', ' ').split(' ').map(string => string.replace(specialChars, '').toLowerCase());
 
+  // Remove new lines
+  text = text.trim();
+
   for (forbiddenWord of forbiddenWords) {
     const splittedText = text.split(' ')
     
