@@ -2,36 +2,47 @@ const fetch = require('node-fetch');
 const url = 'https://en.wikipedia.org/api/rest_v1/page';
 
 async function getRandomArticles() {        
-  const articles = {
+  const response = {
     text: '',
-    list: []
+    originalText: '',
+    indexOfAnswer: '',
+    list: [],
   }
   
+  let originalTitle;
   for (let i = 0; i < 3; i++) {
     // Get random article
-    const response = await fetch(`${url}/random/summary`, {
+    const res = await fetch(`${url}/random/summary`, {
       headers: {
         'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch '
       }
     });
     let data;
     try {
-      data = await response.json();
+      data = await res.json();
     } catch {
       console.log('Something went wrong. ')
-      console.log(response)
+      console.log(res)
     }
 
     if (i === 0) {
-      articles.text = formatResponse(data.title, data.extract);
-      articles.originalText = data.extract;
+      response.text = formatResponse(data.title, data.extract);
+      response.originalText = data.extract;
+      originalTitle = data.title;
     }
 
     // Add article
-    articles.list.push(data.title);
+    response.list.push(data.title);
   }
 
-  return articles;
+  // Randomize order (Courtesy of https://stackoverflow.com/a/12646864)
+  for (let i = response.list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [response.list[i], response.list[j]] = [response.list[j], response.list[i]];
+  }
+  response.indexOfAnswer = response.list.indexOf(originalTitle);
+
+  return response;
 
 }
 
