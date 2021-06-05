@@ -1,10 +1,7 @@
 const fetch = require('node-fetch');
 const url = 'https://en.wikipedia.org/api/rest_v1/page';
 
-async function getRandomArticles() {      
-  return formatResponse('Berowra Waters, New South Wales', 'Berowra Waters is an outer suburb of Northern Sydney, in the state of New South Wales, Australia. Berowra is located 40 kilometres north of the Sydney central business district, in the local government area of Hornsby Shire. Berowra Waters is north-west of the suburbs of Berowra Heights and west of Berowra.')
-  // Berowra Waters, New South Wales
-  
+async function getRandomArticles() {        
   const articles = {
     text: '',
     list: []
@@ -42,21 +39,37 @@ const censorString = '___';
 const specialChars = /[-&\/\\#,+()$~%.'":*?<>{}_]/g;
 function formatResponse(title, text) {
   // Remove special characters in title
-  const forbiddenWords = title.split(' ').map(string => string.replace(specialChars, '').toLowerCase());
+  const forbiddenWords = title.replace('-', ' ').split(' ').map(string => string.replace(specialChars, '').toLowerCase());
 
   for (forbiddenWord of forbiddenWords) {
-    const splittedText = text.split(' ').map(word => {
+    const splittedText = text.split(' ')
+    
+    for (word of splittedText) {
+      const wordIndex = splittedText.indexOf(word);
+      let formattedWord = word;
+
       // Check if word is already removed
-      if (word.startsWith(censorString)) return word;
+      if (word.startsWith(censorString)) continue;
+
+      // Check if word is bigger than forbidden word
+      if (word.length < forbiddenWord.length) continue;
       
       // Remove every word where the current forbidden word starts with it
       // 'Worlds' will be removed when the forbidden word is 'World'
-      if (forbiddenWord.startsWith(word.toLowerCase().replace(specialChars, ''))) return removeWord(word);
-  
-      return word;
-    });
+      if (word.toLowerCase().replace(specialChars, '').startsWith(forbiddenWord)) {
+        formattedWord = removeWord(word);
+      }
+      
+      splittedText[wordIndex] = formattedWord;
+      
+      // Check if adjacent words were removed
+      if (formattedWord.includes(censorString) && splittedText[wordIndex - 1] === censorString) splittedText[wordIndex - 1] = 'censoredString';
+      if (formattedWord.includes(censorString) && splittedText[wordIndex + 1] === censorString) splittedText[wordIndex + 1] = 'censoredString';
+      
+    }
 
-    text = splittedText.join(' ');
+    // Remove duplicates 
+    text = splittedText.filter(word => word !== 'censoredString').join(' ');
   }
   return text;
 }
@@ -68,7 +81,7 @@ function removeWord(word) {
 
   // Find the index of the first and last non special characters
   const firstCharIndex = word.indexOf(filteredWord[0]);
-  const lastCharIndex = word.indexOf(filteredWord[filteredWord.length - 1]);
+  const lastCharIndex = word.lastIndexOf(filteredWord[filteredWord.length - 1]);
 
   // Remove all non special characters from the array
   word.splice(firstCharIndex, lastCharIndex - firstCharIndex + 1)
