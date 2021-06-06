@@ -10,18 +10,14 @@ async function getRandomArticles() {
   }
   
   let originalTitle;
+  let data;
   for (let i = 0; i < 3; i++) {
-    // Get random article
-    const res = await fetch(`${url}/random/summary`, {
-      headers: {
-        'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch '
-      }
-    });
-    let data;
+    const res = await fetch(`${url}/random/summary`, { headers: { 'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch ' } });
+    
     try {
       data = await res.json();
     } catch {
-      console.log('Something went wrong. ')
+      console.log('Something went wrong.')
       console.log(res)
     }
 
@@ -31,7 +27,6 @@ async function getRandomArticles() {
       originalTitle = data.title;
     }
 
-    // Add article
     response.list.push(data.title);
   }
 
