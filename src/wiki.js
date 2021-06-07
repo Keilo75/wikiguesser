@@ -1,7 +1,17 @@
 const fetch = require('node-fetch');
 const url = 'https://en.wikipedia.org/api/rest_v1/page';
+let lastUsedTimestamp = 0;
+let lastResponse;
 
 async function getRandomArticles() {        
+  // Ratelimit function as to not spam Wikipedia's api
+  if ((Date.now() - lastUsedTimestamp) < 5000) {
+    return lastResponse;
+  }
+
+  // Update timestamp
+  lastUsedTimestamp = Date.now();
+  
   const response = {
     text: '',
     originalText: '',
@@ -11,7 +21,7 @@ async function getRandomArticles() {
   
   let originalTitle;
   let data;
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     const res = await fetch(`${url}/random/summary`, { headers: { 'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch ' } });
     
     try {
@@ -36,6 +46,8 @@ async function getRandomArticles() {
     [response.list[i], response.list[j]] = [response.list[j], response.list[i]];
   }
   response.indexOfAnswer = response.list.indexOf(originalTitle);
+
+  lastResponse = response;
 
   return response;
 
