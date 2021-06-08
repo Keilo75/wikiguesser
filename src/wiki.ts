@@ -1,9 +1,17 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 const url = 'https://en.wikipedia.org/api/rest_v1/page';
 let lastUsedTimestamp = 0;
-let lastResponse;
 
-async function getRandomArticles() {        
+interface Response {
+  text: string;
+  originalText: string;
+  indexOfAnswer: number;
+  list: string[];
+}
+
+let lastResponse: Response;
+
+export async function getRandomArticles(): Promise<Response> {        
   // Ratelimit function as to not spam Wikipedia's api
   if ((Date.now() - lastUsedTimestamp) < 5000) {
     return lastResponse;
@@ -11,19 +19,19 @@ async function getRandomArticles() {
 
   // Update timestamp
   lastUsedTimestamp = Date.now();
-  
-  const response = {
+
+  const response: Response = {
     text: '',
     originalText: '',
-    indexOfAnswer: '',
-    list: [],
+    indexOfAnswer: 0,
+    list: []
   }
-  
-  let originalTitle;
-  let data;
+
+  let firstArticleTitle = '';
   for (let i = 0; i < 4; i++) {
     const res = await fetch(`${url}/random/summary`, { headers: { 'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch ' } });
     
+    let data = { title: '', extract: '' };
     try {
       data = await res.json();
     } catch {
@@ -34,7 +42,7 @@ async function getRandomArticles() {
     if (i === 0) {
       response.text = formatResponse(data.title, data.extract);
       response.originalText = data.extract;
-      originalTitle = data.title;
+      firstArticleTitle = data.title;
     }
 
     response.list.push(data.title);
@@ -45,7 +53,7 @@ async function getRandomArticles() {
     const j = Math.floor(Math.random() * (i + 1));
     [response.list[i], response.list[j]] = [response.list[j], response.list[i]];
   }
-  response.indexOfAnswer = response.list.indexOf(originalTitle);
+  response.indexOfAnswer = response.list.indexOf(firstArticleTitle);
 
   lastResponse = response;
 
@@ -55,17 +63,17 @@ async function getRandomArticles() {
 
 const censorString = '___';
 const specialChars = /[-&\/\\#,+()$~%.'":*?<>{}_]/g;
-function formatResponse(title, text) {
+function formatResponse(title: string, text: string): string {
   // Remove special characters in title
   const forbiddenWords = title.replace('-', ' ').split(' ').map(string => string.replace(specialChars, '').toLowerCase());
 
   // Remove new lines
   text = text.trim();
 
-  for (forbiddenWord of forbiddenWords) {
+  for (let forbiddenWord of forbiddenWords) {
     const splittedText = text.split(' ')
     
-    for (word of splittedText) {
+    for (let word of splittedText) {
       const wordIndex = splittedText.indexOf(word);
       let formattedWord = word;
 
@@ -95,22 +103,21 @@ function formatResponse(title, text) {
   return text;
 }
 
-function removeWord(word) {
-  word = word.split('')
+function removeWord(word: string): string {
+  const splittedWord = word.split('');
+
   // Remove all special characters
-  let filteredWord = word.filter(char => !char.match(specialChars));
+  let filteredWord = splittedWord.filter(char => !char.match(specialChars));
 
   // Find the index of the first and last non special characters
-  const firstCharIndex = word.indexOf(filteredWord[0]);
-  const lastCharIndex = word.lastIndexOf(filteredWord[filteredWord.length - 1]);
+  const firstCharIndex = splittedWord.indexOf(filteredWord[0]);
+  const lastCharIndex = splittedWord.lastIndexOf(filteredWord[filteredWord.length - 1]);
 
   // Remove all non special characters from the array
-  word.splice(firstCharIndex, lastCharIndex - firstCharIndex + 1)
+  splittedWord.splice(firstCharIndex, lastCharIndex - firstCharIndex + 1)
   
   // Add the censored string back
-  word.splice(firstCharIndex, 0, censorString);
+  splittedWord.splice(firstCharIndex, 0, censorString);
 
-  return word.join('');
+  return splittedWord.join('');
 }
-
-exports.getRandomArticles = getRandomArticles;
