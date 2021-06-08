@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
+import { shuffleArray } from './shuffleArray';
 const url = 'https://en.wikipedia.org/api/rest_v1/page';
-let lastUsedTimestamp = 0;
 
 interface Response {
   text: string;
@@ -9,17 +9,7 @@ interface Response {
   list: string[];
 }
 
-let lastResponse: Response;
-
 export async function getRandomArticles(): Promise<Response> {        
-  // Ratelimit function as to not spam Wikipedia's api
-  if ((Date.now() - lastUsedTimestamp) < 5000) {
-    return lastResponse;
-  }
-
-  // Update timestamp
-  lastUsedTimestamp = Date.now();
-
   const response: Response = {
     text: '',
     originalText: '',
@@ -27,36 +17,23 @@ export async function getRandomArticles(): Promise<Response> {
     list: []
   }
 
-  let firstArticleTitle = '';
   for (let i = 0; i < 4; i++) {
     const res = await fetch(`${url}/random/summary`, { headers: { 'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch ' } });
-    
-    let data = { title: '', extract: '' };
-    try {
-      data = await res.json();
-    } catch {
-      console.log('Something went wrong.')
-      console.log(res)
-    }
+    const data = await res.json();
 
     if (i === 0) {
       response.text = formatResponse(data.title, data.extract);
       response.originalText = data.extract;
-      firstArticleTitle = data.title;
     }
 
     response.list.push(data.title);
   }
 
-  // Randomize order (Courtesy of https://stackoverflow.com/a/12646864)
-  for (let i = response.list.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [response.list[i], response.list[j]] = [response.list[j], response.list[i]];
-  }
-  response.indexOfAnswer = response.list.indexOf(firstArticleTitle);
-
-  lastResponse = response;
-
+  // Shuffle array
+  const shuffledObject = shuffleArray(response.list);
+  response.list = shuffledObject.array;
+  response.indexOfAnswer = shuffledObject.indexOfAnswer;
+  
   return response;
 
 }
