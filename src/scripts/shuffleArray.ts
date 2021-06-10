@@ -15,3 +15,10 @@ export function shuffleArray(array: string[],): ShuffledObject {
   const indexOfAnswer = array.indexOf(actualTitle);
   return { array, indexOfAnswer };
 }
+
+export interface Response {
+  text: string;
+  originalText?: string;
+  indexOfAnswer: number;
+  list: string[];
+}

@@ -1,13 +1,7 @@
 import fetch from 'node-fetch';
-import { shuffleArray } from './shuffleArray';
-const url = 'https://en.wikipedia.org/api/rest_v1/page';
+import { shuffleArray, Response } from './scripts/shuffleArray';
+import { wiki } from './credentials.json';
 
-interface Response {
-  text: string;
-  originalText: string;
-  indexOfAnswer: number;
-  list: string[];
-}
 
 export async function getRandomArticles(): Promise<Response> {        
   const response: Response = {
@@ -18,7 +12,7 @@ export async function getRandomArticles(): Promise<Response> {
   }
 
   for (let i = 0; i < 4; i++) {
-    const res = await fetch(`${url}/random/summary`, { headers: { 'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch ' } });
+    const res = await fetch(`${wiki.url}/random/summary`, { headers: { 'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch ' } });
     const data = await res.json();
 
     if (i === 0) {
