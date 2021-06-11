@@ -20,7 +20,8 @@
   "homepage": "https://github.com/Keilo75/wikiguesser#readme",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "snoowrap": "^1.23.0"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.10",

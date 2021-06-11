@@ -1,35 +1,47 @@
 import fetch from 'node-fetch';
-import { shuffleArray, Response } from './scripts/shuffleArray';
+import { shuffleArray, apiResponse } from './scripts/shuffleArray';
 import { wiki } from './credentials.json';
 
 
-export async function getRandomArticles(): Promise<Response> {        
-  const response: Response = {
+export async function getRandomWikiArticles(): Promise<apiResponse> {        
+  const apiResponse: apiResponse = {
     text: '',
     originalText: '',
     indexOfAnswer: 0,
     list: []
   }
 
+  const promiseArray = [];
   for (let i = 0; i < 4; i++) {
-    const res = await fetch(`${wiki.url}/random/summary`, { headers: { 'User-Agent': 'wikiguessr/0.1 (https://github.com/Keilo75/wikiguesser) node-fetch ' } });
-    const data = await res.json();
+    promiseArray.push(fetchArticle());
+  }
+  
+  return Promise.all(promiseArray).then(async (values) => {
+    let index = 0;
+    for (let data of values) {
+      const jsonData = await data.json();
 
-    if (i === 0) {
-      response.text = formatResponse(data.title, data.extract);
-      response.originalText = data.extract;
+      if (index === 0) {
+        apiResponse.text = formatResponse(jsonData.title, jsonData.extract);
+        apiResponse.originalText = jsonData.extract;
+      }
+
+      apiResponse.list.push(jsonData.title);
+
+      index++;
     }
 
-    response.list.push(data.title);
-  }
+    // Shuffle array
+    const shuffledObject = shuffleArray(apiResponse.list);
+    apiResponse.list = shuffledObject.array;
+    apiResponse.indexOfAnswer = shuffledObject.indexOfAnswer;
 
-  // Shuffle array
-  const shuffledObject = shuffleArray(response.list);
-  response.list = shuffledObject.array;
-  response.indexOfAnswer = shuffledObject.indexOfAnswer;
-  
-  return response;
+    return apiResponse;
+  })
+}
 
+async function fetchArticle() {
+  return await fetch(`${wiki.url}/random/summary`, { headers: { 'User-Agent': wiki.userAgent } });
 }
 
 const censorString = '___';

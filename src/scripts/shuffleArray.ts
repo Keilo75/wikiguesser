@@ -16,7 +16,7 @@ export function shuffleArray(array: string[],): ShuffledObject {
   return { array, indexOfAnswer };
 }
 
-export interface Response {
+export interface apiResponse {
   text: string;
   originalText?: string;
   indexOfAnswer: number;

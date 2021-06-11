@@ -1,3 +1,8 @@
-import { getRandomArticles } from './src/wiki';
+import { getRandomWikiArticles } from './src/wiki';
 
-getRandomArticles().then(console.log)
+async function testFile() {
+  const response = await getRandomWikiArticles();
+  console.log(response);
+}
+
+testFile()
