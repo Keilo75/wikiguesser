@@ -2,14 +2,29 @@ import fetch from 'node-fetch';
 import { shuffleArray, apiResponse } from './scripts/shuffleArray';
 import { wiki } from './credentials.json';
 
+let lastUsedTimestamp = Date.now() - 5000;
+let lastResponse: apiResponse;
+let lastResponseServers: Array<string | false>;
 
-export async function getRandomWikiArticles(): Promise<apiResponse> {        
+export async function getRandomWikiArticles(serverID: string | false): Promise<apiResponse> {        
   const apiResponse: apiResponse = {
     text: '',
     originalText: '',
     indexOfAnswer: 0,
     list: []
   }
+
+  // If the last request happened less than 5 seconds ago and the server has not yet used the last request,
+  // return it. Otherwise, return a completely new request.
+  // This edge case only happens in a server where multiple games were started in 5 seconds.
+  if (Date.now() - lastUsedTimestamp < 5000 && serverID) {
+    if (lastResponseServers.includes(serverID)) {
+      await getRandomWikiArticles(false);
+    }
+    return lastResponse;
+  }
+  
+  lastUsedTimestamp = Date.now();
 
   const promiseArray = [];
   for (let i = 0; i < 4; i++) {
@@ -35,6 +50,9 @@ export async function getRandomWikiArticles(): Promise<apiResponse> {
     const shuffledObject = shuffleArray(apiResponse.list);
     apiResponse.list = shuffledObject.array;
     apiResponse.indexOfAnswer = shuffledObject.indexOfAnswer;
+
+    lastResponse = apiResponse;
+    lastResponseServers = [serverID];
 
     return apiResponse;
   })
