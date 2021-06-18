@@ -6,6 +6,7 @@ export async function getRandomWikiArticles(): Promise<apiResponse> {
   const apiResponse: apiResponse = {
     text: '',
     originalText: '',
+    link: '',
     indexOfAnswer: 0,
     list: []
   }
@@ -23,6 +24,7 @@ export async function getRandomWikiArticles(): Promise<apiResponse> {
       if (index === 0) {
         apiResponse.text = formatResponse(jsonData.title, jsonData.extract);
         apiResponse.originalText = jsonData.extract;
+        apiResponse.link = jsonData.content_urls.desktop.page;
       }
 
       apiResponse.list.push(jsonData.title);
@@ -40,7 +42,7 @@ export async function getRandomWikiArticles(): Promise<apiResponse> {
 }
 
 async function fetchArticle() {
-  return await fetch(`${wiki.url}/random/summary`, { headers: { 'User-Agent': wiki.userAgent } });
+  return await fetch(wiki.url, { headers: { 'User-Agent': wiki.userAgent } });
 }
 
 const censorString = '___';

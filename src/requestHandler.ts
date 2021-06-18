@@ -2,24 +2,27 @@ import { getRandomWikiArticles } from './wiki';
 import { getRandomRedditPosts } from './reddit';
 import { apiResponse } from './scripts/shuffleArray';
 
-const lastUsedTimestamp = Date.now() - 5000;
+const lastUsedTimestamp = Date.now() - 60000;
 const emptyResponse: apiResponse = {
   text: '',
   originalText: '',
   indexOfAnswer: 0,
-  list: []
+  list: [],
+  link: ''
 };
 const lastResponseServers: Array<string | false> = [];
 const ratelimits = {
   wiki: {
     lastUsedTimestamp: lastUsedTimestamp,
     lastResponse: emptyResponse,
-    lastResponseServers: lastResponseServers
+    lastResponseServers: lastResponseServers,
+    time: 5000
   },
   reddit: {
     lastUsedTimestamp: lastUsedTimestamp,
     lastResponse: emptyResponse,
-    lastResponseServers: lastResponseServers
+    lastResponseServers: lastResponseServers,
+    time: 10000
   }
 }
 
@@ -30,7 +33,7 @@ export async function getResponse(api: possibleAPIs, serverID: string | false): 
   // If the last request happened less than 5 seconds ago and the server has not yet used the last request,
   // return it. Otherwise, return a completely new request.
   // This edge case only happens in a server where multiple games were started in 5 seconds.
-  if (Date.now() - ratelimit.lastUsedTimestamp < 5000 && serverID) {
+  if (Date.now() - ratelimit.lastUsedTimestamp < ratelimit.time && serverID) {
     if (ratelimit.lastResponseServers.includes(serverID)) {
       await getResponse(api, false);
     }

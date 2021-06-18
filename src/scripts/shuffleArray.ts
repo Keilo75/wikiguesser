@@ -19,6 +19,7 @@ export function shuffleArray(array: string[],): ShuffledObject {
 export interface apiResponse {
   text: string;
   originalText?: string;
+  link: string
   indexOfAnswer: number;
   list: string[];
 }
