@@ -40,7 +40,7 @@ export async function getRandomWikiArticles(): Promise<apiResponse> {
 }
 
 async function fetchArticle() {
-  return await fetch(`${wiki.url}/random/summary`, { headers: { 'User-Agent': wiki.userAgent } });
+  return await fetch(wiki.url, { headers: { 'User-Agent': wiki.userAgent } });
 }
 
 const censorString = '___';
