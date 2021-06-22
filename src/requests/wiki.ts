@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { shuffleArray, apiResponse } from './scripts/shuffleArray';
-import { wiki } from './credentials.json';
+import { shuffleArray, apiResponse } from './shuffleArray';
+import { wiki } from '../../credentials.json';
 
 export async function getRandomWikiArticles(): Promise<apiResponse> {        
   const apiResponse: apiResponse = {
