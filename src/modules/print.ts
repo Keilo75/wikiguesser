@@ -1,24 +1,20 @@
 import chalk from 'chalk';
 
-type PrintType = 'status' | 'error';
+type PrintType = 'status' | 'error' | 'commands';
 
 export default function print(type: PrintType, text: string): void {
-  // Add spaces to type
-  const addedSpaces = 2;
-  const spacedTypeArray = type.split('');
-  for (let i = 0; i < addedSpaces; i++) {
-    spacedTypeArray.push(' ');
-    spacedTypeArray.unshift(' ');
-  }
-  const spacedType = spacedTypeArray.join('').toUpperCase();
   const consoleText = [];
+  const uppercaseType = type.toUpperCase();
   
   // Get variables
   const textArray = text.split(' ');
+  
   for (let word of textArray) {    
-    if (word.match(/\§([^]+)\§/)) {
-      word = word.replace(/\§/g, '');
-      consoleText.push(chalk.bold(word));
+    if (word.match(/\§([^]+)\§([^\s]+)/)) {
+      // Remove first § and split text before and after
+      const splittedWord = word.substring(1).split('§');
+      
+      consoleText.push(chalk.bold(splittedWord[0]) + splittedWord[1]);
     } else {
       consoleText.push(word);
     }
@@ -26,16 +22,19 @@ export default function print(type: PrintType, text: string): void {
 
   switch (type) {
     case 'status':
-      consoleText.unshift(chalk.bgGreen.black(spacedType));
-      console.log(consoleText.join(' '));
+      consoleText.unshift(chalk.green.bold(uppercaseType));
     break;
 
     case 'error':
-      consoleText.unshift(chalk.bgRed.white(spacedType));  
-      console.log(consoleText.join(' '));
+      consoleText.unshift(chalk.red.bold(uppercaseType));  
     break;
-  }
 
+    case 'commands':
+      consoleText.unshift(chalk.blueBright.bold(uppercaseType));  
+      break;
+    }
+    
+    console.log(consoleText.join(' '));
   
 
 }

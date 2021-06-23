@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Keilo75/wikiguesser#readme",
   "dependencies": {
     "chalk": "^4.1.1",
+    "discord.js": "^13.0.0-dev.1816a93b1b1b2bae47e8651e76fa53699de8421d",
     "mongoose": "^5.12.14",
     "node-fetch": "^2.6.1"
   },
