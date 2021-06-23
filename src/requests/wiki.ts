@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { shuffleArray, apiResponse } from './shuffleArray';
+import { shuffleArray, apiResponse } from '../modules/shuffleArray';
 import { wiki } from '../../credentials.json';
 
 export async function getRandomWikiArticles(): Promise<apiResponse> {        

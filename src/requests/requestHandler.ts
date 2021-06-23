@@ -1,5 +1,5 @@
 import { getRandomWikiArticles } from './wiki';
-import { apiResponse } from './shuffleArray';
+import { apiResponse } from '../modules/shuffleArray';
 
 const lastUsedTimestamp = Date.now() - 5000;
 const emptyResponse: apiResponse = {
