@@ -1,12 +1,13 @@
 import fetch from 'node-fetch';
 import { shuffleArray, apiResponse } from '../modules/shuffleArray';
-import { wiki } from '../../credentials.json';
+import { wiki } from '../../config.json';
 
 export async function getRandomWikiArticles(): Promise<apiResponse> {        
   const apiResponse: apiResponse = {
     text: '',
     originalText: '',
     indexOfAnswer: 0,
+    link: '',
     list: []
   }
 
@@ -23,6 +24,7 @@ export async function getRandomWikiArticles(): Promise<apiResponse> {
       if (index === 0) {
         apiResponse.text = formatResponse(jsonData.title, jsonData.extract);
         apiResponse.originalText = jsonData.extract;
+        apiResponse.link = jsonData.content_urls.desktop.page;
       }
 
       apiResponse.list.push(jsonData.title);
@@ -43,7 +45,7 @@ async function fetchArticle() {
   return await fetch(wiki.url, { headers: { 'User-Agent': wiki.userAgent } });
 }
 
-const censorString = '___';
+const censorString = '\\_\\_\\_'
 const specialChars = /[-&\/\\#,+()$~%.'":*?<>{}_]/g;
 function formatResponse(title: string, text: string): string {
   // Remove special characters in title
@@ -60,7 +62,7 @@ function formatResponse(title: string, text: string): string {
       let formattedWord = word;
 
       // Check if word is already removed
-      if (word.startsWith(censorString)) continue;
+      if (word.includes(censorString)) continue;
 
       // Check if word is bigger than forbidden word
       if (word.length < forbiddenWord.length) continue;

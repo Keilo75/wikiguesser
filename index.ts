@@ -1,14 +1,16 @@
 import print from './src/modules/print';
 import discord, { ApplicationCommandData, CommandInteraction } from 'discord.js';
-import { token } from './credentials.json';
+import { token } from './config.json';
 import fs from 'fs';
+import getResponse from './src/requests/requestHandler';
 
 interface Command {
   config: {
     name: string,
-    description: string
+    description: string,
+    options: any,
   },
-  run(interaction: CommandInteraction, args: Array<string>): void
+  run(interaction: CommandInteraction): void
 }
 
 print('status', `Compiling...`);
@@ -29,7 +31,7 @@ for (const folder of commandFolders) {
   }
 }
 
-client.on('ready', () => {
+client.on('ready', async () => {
   print('status', `Succesfully logged in as §${client.user?.tag}§.`)
 });
 
@@ -45,15 +47,20 @@ client.on('message', async (message) => {
   
     commands.forEach(command => {
       const { config } = command;
-      
-      commandsArray.push({
+
+      const commandData = {
         name: config.name,
-        description: config.description
-      });
+        description: config.description,
+        options: config.options,
+      }
+
+      commandsArray.push(commandData);
     });
     
     // Set commands
-    client.guilds.cache.get('759083824298066011')?.commands.set(commandsArray);
+    client.guilds.cache.get("759083824298066011")?.commands.set(commandsArray);
+
+    message.channel.send(':green_square: **|** Updated commands succesfully.')
   
     print('commands', 'Updated commands succesfully.')
 	}
@@ -64,7 +71,7 @@ client.on('interaction', (interaction) => {
 
   const command = commands.get(interaction.commandName);
 
-  command?.run(interaction, []);
+  command?.run(interaction);
 });
  
 client.login(token);

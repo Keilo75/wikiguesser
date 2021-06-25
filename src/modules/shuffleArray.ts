@@ -18,7 +18,8 @@ export function shuffleArray(array: string[],): ShuffledObject {
 
 export interface apiResponse {
   text: string;
-  originalText?: string;
+  originalText: string;
   indexOfAnswer: number;
+  link: string;
   list: string[];
 }

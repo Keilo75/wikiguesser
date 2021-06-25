@@ -119,4 +119,4 @@ dist
 
 # Custom
 assets
-credentials.json
+config.json

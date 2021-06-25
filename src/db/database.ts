@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { dbURL } from '../../credentials.json';
+import { dbURL } from '../../config.json';
 
 // Connect to database
 mongoose.connect(dbURL, {
