@@ -95,6 +95,9 @@ module.exports = {
     .catch(() => {
       endEmbed.setColor(colors.red);
       endEmbed.setTitle('You didn\'t guess.')
+
+      user.guesses.wrong += 1;
+      user.streaks.current = 0;
         
       if (!restarted) {
         interaction.editReply({

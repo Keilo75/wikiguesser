@@ -15,6 +15,7 @@ db.on('error', (error) => console.error(error));
 const userSchema = new mongoose.Schema({
   userID: String,
   games: Number,
+  private: Boolean,
   guesses: {
     correct: Number,
     wrong: Number,
@@ -29,6 +30,7 @@ const userSchema = new mongoose.Schema({
 interface UserType {
   userID: string,
   games: number,
+  private: boolean,
   guesses: {
     correct: number,
     wrong: number,
@@ -48,6 +50,7 @@ export const getUser = async (userID: string): Promise<UserType> => {
   if (!user) {
     user = {
       userID,
+      private: false,
       games: 0,
       guesses: {
         correct: 0,
@@ -81,6 +84,7 @@ export const setUser = async (user: UserType) => {
     userDocument.games = user.games;
     userDocument.guesses = user.guesses;
     userDocument.streaks = user.streaks;
+    userDocument.private = user.private;
 
     userDocument.save((err: any, object: any) => {
       if (err) console.error(err);
