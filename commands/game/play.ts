@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageButton, MessageEmbed, MessageComponentInteraction, Message } from "discord.js";
+import { CommandInteraction, MessageButton, MessageEmbed, MessageComponentInteraction, Message, TextChannel } from "discord.js";
 import getResponse from './../../src/requests/requestHandler';
 import { colors } from '../../config.json'
 
@@ -8,14 +8,17 @@ module.exports = {
     description: 'Start a game.'
   },
 
-  run: async (interaction: CommandInteraction) => {
-    await interaction.defer();
+  run: async (interaction: CommandInteraction, restarted: boolean, serverID: string, channel: TextChannel) => {
+    const answerTime = 20;
+    const playAgainTime = 10;
     
-    const guildID = interaction.guildID?.toString();
+    if (!restarted) await interaction.defer();
+    
+    const guildID = (!restarted) ? interaction.guildID?.toString() : serverID;
     const response = await getResponse(guildID);
 
     const embed = new MessageEmbed()
-      .setTitle('Guess the Wikipedia article in 10 seconds.')
+      .setTitle(`Guess the Wikipedia article in ${answerTime} seconds.`)
       .setColor(colors.white)
       .setDescription(response.text)
       .setFooter(interaction.user.tag, interaction.user.displayAvatarURL());
@@ -31,14 +34,22 @@ module.exports = {
       buttons.push(button);
     }
 
-    await interaction.editReply({ 
-      embeds: [embed],
-      components: [buttons] 
-    });
+    if (!restarted) {
+      await interaction.editReply({ 
+        embeds: [embed],
+        components: [buttons] 
+      });
+    } else {
+      var msg = await channel.send({
+        embeds: [embed],
+        components: [buttons] 
+      })
+    }
 
     // Create collector
     const endEmbed = new MessageEmbed()
       .addField(response.list[response.indexOfAnswer], response.originalText)
+      .setFooter(`${interaction.user.tag} | Click 'Play again' to start a new game. This will expire in ${playAgainTime} seconds.`, interaction.user.displayAvatarURL());
 
     // Create play again button
     const playButton = new MessageButton()
@@ -46,11 +57,12 @@ module.exports = {
       .setLabel('Play again')
       .setCustomID('no');
 
-    const message = await interaction.fetchReply() as Message;
+    // @ts-ignore
+    // msg will never be undefined here
+    const message = (!restarted) ? await interaction.fetchReply() as Message : msg;
 		const filter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
 
-    console.time()
-    await message.awaitMessageComponentInteraction(filter, { time: 10000 })
+    await message.awaitMessageComponentInteraction(filter, { time: answerTime * 1000 })
     .then(async i => {
       const clickedButton = parseInt(i.customID);
       if (clickedButton === response.indexOfAnswer) {
@@ -61,9 +73,8 @@ module.exports = {
         endEmbed.setTitle('You guessed wrong.')
         endEmbed.setDescription(`Your guess was **${response.list[clickedButton]}**.`)
       }
-      endEmbed.setFooter(`${interaction.user.tag} | Click 'Play again' to start a new game. This will expire in 10 seconds.`, interaction.user.displayAvatarURL());
 
-      i.update({
+       i.update({
         components: [[ playButton ]],
         embeds: [ endEmbed ]
       });
@@ -73,14 +84,41 @@ module.exports = {
       endEmbed.setColor(colors.red);
       endEmbed.setTitle('You didn\'t guess.')
         
-      interaction.editReply({
-        components: [[ playButton ]],
-        embeds: [ endEmbed ]
-      });
+      if (!restarted) {
+        interaction.editReply({
+          components: [[ playButton ]],
+          embeds: [ endEmbed ]
+        });
+      } else {
+        msg.edit({
+          components: [[ playButton ]],
+          embeds: [ endEmbed ]
+        });
+      }
     });
 
+    endEmbed.setFooter(interaction.user.tag, interaction.user.displayAvatarURL());
+    await message.awaitMessageComponentInteraction(filter, { time: playAgainTime * 1000 })
+    .then(i => {
+      i.update({
+        components: [],
+        embeds: [ endEmbed ]
+      })
 
-
-
+      module.exports.run(interaction, true, guildID, interaction.channel);
+    })
+    .catch(() => {
+      if (!restarted) {
+        interaction.editReply({
+          components: [],
+          embeds: [ endEmbed ]
+        });
+      } else {
+        msg.edit({
+          components: [],
+          embeds: [ endEmbed ]
+        });
+      }
+    });
   }
 }
