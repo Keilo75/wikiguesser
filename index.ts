@@ -2,7 +2,6 @@ import print from './src/modules/print';
 import discord, { ApplicationCommandData, CommandInteraction } from 'discord.js';
 import { token } from './config.json';
 import fs from 'fs';
-import getResponse from './src/requests/requestHandler';
 
 interface Command {
   config: {

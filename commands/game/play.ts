@@ -1,6 +1,7 @@
 import { CommandInteraction, MessageButton, MessageEmbed, MessageComponentInteraction, Message, TextChannel } from "discord.js";
 import getResponse from './../../src/requests/requestHandler';
 import { colors } from '../../config.json'
+import { getUser, setUser } from '../../src/db/database';
 
 module.exports = {
   config: {
@@ -9,8 +10,11 @@ module.exports = {
   },
 
   run: async (interaction: CommandInteraction, restarted: boolean, serverID: string, channel: TextChannel) => {
-    const answerTime = 20;
-    const playAgainTime = 10;
+    // Get user
+    const user = await getUser(interaction.user.id);
+    
+    const answerTime = 10;
+    const playAgainTime = 5;
     
     if (!restarted) await interaction.defer();
     
@@ -68,10 +72,18 @@ module.exports = {
       if (clickedButton === response.indexOfAnswer) {
         endEmbed.setColor(colors.green);
         endEmbed.setTitle('You guessed correctly!')
+        
+        user.guesses.correct += 1;
+        user.streaks.current += 1;
+
+        if (user.streaks.current > user.streaks.highest) user.streaks.highest = user.streaks.current;
       } else {
         endEmbed.setColor(colors.red);
         endEmbed.setTitle('You guessed wrong.')
         endEmbed.setDescription(`Your guess was **${response.list[clickedButton]}**.`)
+        
+        user.guesses.wrong += 1;
+        user.streaks.current = 0;
       }
 
        i.update({
@@ -96,6 +108,12 @@ module.exports = {
         });
       }
     });
+
+    // Update user
+    user.games += 1;
+    user.guesses.correctPercentage = Math.round((user.guesses.correct / user.games) * 10000) / 100 + "%";
+
+    setUser(user).catch(console.error);
 
     endEmbed.setFooter(interaction.user.tag, interaction.user.displayAvatarURL());
     await message.awaitMessageComponentInteraction(filter, { time: playAgainTime * 1000 })
