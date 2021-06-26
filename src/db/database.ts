@@ -44,6 +44,10 @@ interface UserType {
 
 const User = mongoose.model('User', userSchema);
 
+export const getUserCount = async (): Promise<string> => {
+  return await User.countDocuments({}) + ""
+}
+
 export const getUser = async (userID: string): Promise<UserType> => {
   let user = await User.findOne({ userID });
  
@@ -67,7 +71,7 @@ export const getUser = async (userID: string): Promise<UserType> => {
   }
 
   return user;
-}
+};
 
 export const setUser = async (user: UserType) => {
   const userDocument = await User.findOne({ userID: user.userID });
@@ -89,6 +93,6 @@ export const setUser = async (user: UserType) => {
     userDocument.save((err: any, object: any) => {
       if (err) console.error(err);
     });
-  }
+  };
 }
 
