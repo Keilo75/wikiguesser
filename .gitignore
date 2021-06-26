@@ -118,5 +118,4 @@ dist
 .pnp.*
 
 # Custom
-assets
 config.json
