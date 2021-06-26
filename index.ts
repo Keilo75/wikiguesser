@@ -1,6 +1,6 @@
 import print from './src/modules/print';
 import discord, { ApplicationCommandData, CommandInteraction } from 'discord.js';
-import { token, test_guild, isDev } from './config.json';
+import { token, isDev } from './config.json';
 import fs from 'fs';
 
 interface Command {
@@ -38,6 +38,7 @@ client.on('message', async (message) => {
   if (!client.application?.owner) await client.application?.fetch();
 
   if (message.author.bot) return;
+  if (!message.guild) return;
 
   if (message.content.toLowerCase() === '!deploy' && message.author.id === client.application?.owner?.id) {
 
@@ -58,10 +59,10 @@ client.on('message', async (message) => {
     
     // Set commands
     if (isDev) {
-      client.guilds.cache.get(`${BigInt(test_guild)}`)?.commands.set(commandsArray);
+      client.guilds.cache.get(message.guild.id)?.commands.set(commandsArray);
     } else {
       client.application?.commands.set(commandsArray);
-      client.guilds.cache.get(`${BigInt(test_guild)}`)?.commands.set([]);
+      client.guilds.cache.get(message.guild.id)?.commands.set([]);
     }
 
     message.channel.send(':green_square: **|** Updated commands succesfully.')
