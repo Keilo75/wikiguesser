@@ -30,7 +30,8 @@ If you want to contribute, feel free to simply fork the repository and submit a 
 1. [Create a discord bot account](https://discord.com/developers/applications) and copy the token.
 2. Clone the repository and run `npm install`.
 3. Create a `config.json` in the root directory like this:
-```{
+```
+{
   "wiki": {
     "userAgent": "Add a user agent here.",
     "url": "https://en.wikipedia.org/api/rest_v1/page/random/summary"
