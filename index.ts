@@ -1,8 +1,10 @@
 import print from './src/modules/print';
 import discord, { ApplicationCommandData, CommandInteraction } from 'discord.js';
-import { token } from './config.json';
+import { token, test_guild } from './config.json';
 import fs from 'fs';
 
+// Set this variable to true to deploy commands in a guild
+const isDev = true;
 interface Command {
   config: {
     name: string,
@@ -57,7 +59,12 @@ client.on('message', async (message) => {
     });
     
     // Set commands
-    client.guilds.cache.get("759083824298066011")?.commands.set(commandsArray);
+    if (isDev) {
+      client.guilds.cache.get(`${BigInt(test_guild)}`)?.commands.set(commandsArray);
+    } else {
+      client.application?.commands.set(commandsArray);
+      client.guilds.cache.get(`${BigInt(test_guild)}`)?.commands.set([]);
+    }
 
     message.channel.send(':green_square: **|** Updated commands succesfully.')
   
