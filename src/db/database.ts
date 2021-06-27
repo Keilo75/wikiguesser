@@ -2,11 +2,16 @@ import mongoose from 'mongoose';
 import { dbURL } from '../../config.json';
 import print from '../modules/print';
 
-// Connect to database
-mongoose.connect(dbURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+(async () => {
+  try {
+    mongoose.connect(dbURL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
+} catch (err) {
+  console.log('error: ' + err)
+}
+})()
 
 const db = mongoose.connection;
 db.once('open', () => print('status', 'Connected to database!'));
@@ -95,4 +100,3 @@ export const setUser = async (user: UserType) => {
     });
   };
 }
-
