@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-type PrintType = 'status' | 'error' | 'commands';
+type PrintType = 'status' | 'error' | 'commands' | 'guild';
 
 export default function print(type: PrintType, text: string): void {
   const consoleText = [];
@@ -31,8 +31,12 @@ export default function print(type: PrintType, text: string): void {
 
     case 'commands':
       consoleText.unshift(chalk.blueBright.bold(uppercaseType));  
-      break;
-    }
+    break;
+
+    case 'guild':
+      consoleText.unshift(chalk.magenta.bold(uppercaseType));
+    break;
+  }
     
     console.log(consoleText.join(' '));
   

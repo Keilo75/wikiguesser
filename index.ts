@@ -78,5 +78,9 @@ client.on('interaction', (interaction) => {
 
   command?.run(interaction);
 });
+
+client.on('guildCreate', (guild) => {
+  print('guild', `Joined guild ${guild.name}.`);
+});
  
 client.login(token);
