@@ -3,12 +3,7 @@ A discord bot which lets you guess the title of wikipedia articles.
 
 ![Example Image of bot](https://cdn.discordapp.com/attachments/858076324979671060/858272004654235648/unknown.png)
 
-# Usage
-[Click here to invite the bot to your server!](https://discord.com/api/oauth2/authorize?client_id=851499065711263764&permissions=0&scope=bot%20applications.commands)
-
-Once you've added it, simply type / to see a list of available commands.
-
-### Commands:
+# Commands
 `play` - Start a game.  
 `user` - Get information about a user's statistics.  
 `toggleprivate` - Toggle wheter other users can see your stats.  
