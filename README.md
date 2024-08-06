@@ -1,7 +1,7 @@
 # wikiguesser
 A discord bot which lets you guess the title of wikipedia articles.
 
-![Example Image of bot](https://cdn.discordapp.com/attachments/858076324979671060/858272004654235648/unknown.png)
+![Example Image of Bot](./assets/example.png)
 
 # Commands
 `play` - Start a game.  
