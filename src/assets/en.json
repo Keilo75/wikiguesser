@@ -13,6 +13,9 @@
     "user": "Get information about a user's stats.",
     "user-option": "User for which to show stats"
   },
+  "play": {
+    "title": "Guess the Wikipedia article in {{seconds}} seconds."
+  },
   "about": {
     "title": "About",
     "description": "A discord bot which lets you guess the title of Wikipedia articles.",
