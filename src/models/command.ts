@@ -2,6 +2,7 @@ import type {
   ChatInputCommandInteraction,
   Client,
   SlashCommandBuilder,
+  SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 
 import type { Storage } from "./storage";
@@ -13,6 +14,6 @@ type Args = {
 };
 
 export type Command = {
-  data: SlashCommandBuilder;
+  data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
   execute: (args: Args) => Promise<void>;
 };

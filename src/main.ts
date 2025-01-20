@@ -6,9 +6,9 @@ import { t } from "i18next";
 
 import { commands } from "./commands";
 import { Logger } from "./libs/logger";
-import { storage } from "./libs/sqlite";
 
 dotenv.config();
+import { storage } from "./libs/sqlite";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],

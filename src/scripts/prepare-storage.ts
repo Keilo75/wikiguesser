@@ -11,17 +11,22 @@ if (fs.existsSync(process.env.DB_PATH)) {
   process.exit(1);
 }
 
-const db = new Database(process.env.DB_PATH, { fileMustExist: false });
-db.prepare(
-  `
+const db = new Database(process.env.DB_PATH, {
+  fileMustExist: false,
+});
+const result = db
+  .prepare(
+    `
   CREATE TABLE user (
-    ID varchar(255) NOT NULL,
-    GameCount int NOT NULL,
+    ID varchar(255),
+    GameCount int,
     CorrectGuesses int,
-    WrongGuesses int NOT NULL,
-    CurrentStreak int NOT NULL,
-    HighestStreak int NOT NULL
+    WrongGuesses int,
+    CurrentStreak int,
+    HighestStreak int
   );`
-).run();
+  )
+  .run();
 
-Logger.log("Created users table succesfully.");
+Logger.log("Created user table succesfully.");
+Logger.debug("Sqlite Response", result);

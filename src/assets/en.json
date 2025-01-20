@@ -2,13 +2,16 @@
   "status": "Diving into a rabbit hole...",
   "messages": {
     "error": ":x: **|** An unexpected error occured. Please check the logs for details.",
-    "ping": ":timer: **|** Current roundtrip latency is {{latency}}ms."
+    "ping": ":timer: **|** Current roundtrip latency is {{latency}}ms.",
+    "stats-bot": ":red_square: **|** Cannot retrieve information about bots.",
+    "stats-not-found": ":red_square: **|** The selected user has not played a game yet."
   },
   "commands": {
     "about": "Get information about the bot.",
     "ping": "Show the bot's current ping.",
     "play": "Start a game.",
-    "user": "Get information about a user's statistics."
+    "user": "Get information about a user's stats.",
+    "user-option": "User for which to show stats"
   },
   "about": {
     "title": "About",

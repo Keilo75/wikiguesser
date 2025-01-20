@@ -1,4 +1,4 @@
-export type User = {
+export type UserStats = {
   id: string;
   gameCount: number;
   correctGuesses: number;
@@ -8,6 +8,6 @@ export type User = {
 };
 
 export type Storage = {
-  fetchUser: (id: string) => Promise<User | null>;
-  updateUser: (user: User) => Promise<void>;
+  fetchUserStats: (id: string) => Promise<UserStats | null>;
+  updateUserStats: (stats: UserStats) => Promise<void>;
 };
