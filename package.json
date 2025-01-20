@@ -11,7 +11,8 @@
     "scripts:register-commands:dev": "cross-env MODE=dev ts-node src/scripts/register-commands.ts",
     "scripts:register-commands:prod": "cross-env MODE=prod ts-node src/scripts/register-commands.ts",
     "scripts:delete-commands:dev": "cross-env DELETE=TRUE MODE=dev ts-node src/scripts/register-commands.ts",
-    "scripts:delete-commands:prod": "cross-env DELETE=TRUE MODE=prod ts-node src/scripts/register-commands.ts"
+    "scripts:delete-commands:prod": "cross-env DELETE=TRUE MODE=prod ts-node src/scripts/register-commands.ts",
+    "scripts:prepare-storage": "ts-node src/scripts/prepare-storage.ts"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   "homepage": "https://github.com/Keilo75/wikiguesser#readme",
   "devDependencies": {
     "@eslint/js": "^9.8.0",
+    "@types/better-sqlite3": "^7.6.12",
     "@vitest/ui": "^2.0.5",
     "cross-env": "^7.0.3",
     "eslint": "^9.8.0",
@@ -39,6 +41,7 @@
   },
   "dependencies": {
     "@fast-csv/parse": "^5.0.0",
+    "better-sqlite3": "^11.8.1",
     "chalk": "^4.1.2",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",

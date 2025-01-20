@@ -6,6 +6,7 @@ import { t } from "i18next";
 
 import { commands } from "./commands";
 import { Logger } from "./libs/logger";
+import { storage } from "./libs/sqlite";
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   try {
-    await command.execute({ interaction, client });
+    await command.execute({ interaction, client, storage });
   } catch (err) {
     Logger.error(`Error while executing ${commandName}.`, err);
 
