@@ -2,8 +2,7 @@
   "status": "Diving into a rabbit hole...",
   "messages": {
     "error": ":x: **|** An unexpected error occured. Please check the logs for details.",
-    "pinging": ":timer: **|** Pinging...",
-    "pinged": ":timer: **|** Current roundtrip latency is {{latency}}ms."
+    "ping": ":timer: **|** Current roundtrip latency is {{latency}}ms."
   },
   "commands": {
     "about": "Get information about the bot.",
@@ -15,7 +14,7 @@
     "title": "About",
     "description": "A discord bot which lets you guess the title of Wikipedia articles.",
     "source-code": "Source Code",
-    "source-code-url": "[GitHub](https://github.com/Keilo75/admiral-bot)",
+    "github": "[GitHub](https://github.com/Keilo75/admiral-bot)",
     "footer": "Made by Keilo75"
   }
 }

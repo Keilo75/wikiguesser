@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import { t } from "i18next";
 
 import { commands } from "./commands";
-import { Logger } from "./utils/logger";
+import { Logger } from "./libs/logger";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ const client = new Client({
     activities: [
       {
         name: t("status"),
-        type: ActivityType.Listening,
+        type: ActivityType.Custom,
       },
     ],
   },
@@ -37,7 +37,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   try {
-    await command.execute({ interaction });
+    await command.execute({ interaction, client });
   } catch (err) {
     Logger.error(`Error while executing ${commandName}.`, err);
 
@@ -50,3 +50,5 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   }
 });
+
+client.login(process.env.DISCORD_TOKEN);

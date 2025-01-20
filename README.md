@@ -1,6 +1,6 @@
 # wikiguesser
 
-A discord bot which lets you guess the title of wikipedia articles. TODO: Create link
+A discord bot which lets you guess the title of wikipedia articles. It can be accessed using the [invitation link](https://discord.com/oauth2/authorize?client_id=858792027235024896).
 
 ![Example Image of Bot](./src/assets/example.png)
 
@@ -8,8 +8,7 @@ A discord bot which lets you guess the title of wikipedia articles. TODO: Create
 
 `play` - Start a game.  
 `user` - Get information about a user's statistics.  
-`about` - Show information about the bot.  
-`ping` - Get the bots ping.
+`about` - Show information about the bot.
 
 # Contributing
 

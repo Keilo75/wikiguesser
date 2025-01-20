@@ -12,7 +12,7 @@ export const about: Command = {
       .setColor(Colors.White)
       .setTitle(t("about.title"))
       .setDescription(t("about.description"))
-      .addFields({ name: t("about.links-title"), value: t("about.links") })
+      .addFields({ name: t("about.source-code"), value: t("about.github") })
       .setFooter({ text: t("about.footer") });
     await interaction.reply({ embeds: [embed] });
   },
