@@ -25,8 +25,13 @@ If you want to contribute, feel free to simply fork the repository and submit a 
 3. Create a `.env` file in the root directory with the following values:
 
 ```
-TODO: Document .env
+DISCORD_TOKEN=__
+CLIENT_ID=__
+GUILD_ID=__
+DB_PATH=./storage.db
 ```
+
+4. Run `npm run scripts:prepare-storage` to create a sqlite database.
 
 ## Scripts
 
@@ -35,7 +40,6 @@ These scripts can be run with `npm run <script>`:
 - `start`: Starts the bot.
 - `dev`: Starts the bot and automatically reloads on file change.
 - `lint`: Run ESLint.
-- `test`: Run vitest.
 - `scripts:register-commands:dev`: Register commands to a specific guild (`CLIENT_ID` and `GUILD_ID` environment variables must be set).
 - `scripts:register-commands:prod`: Register commands globally (`CLIENT_ID` environment variable must be set).
 
