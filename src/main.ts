@@ -4,6 +4,7 @@ import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
 import { t } from "i18next";
 
+import config from "../config.json";
 import { commands } from "./commands";
 import { Cache } from "./libs/cache";
 import { Logger } from "./libs/logger";
@@ -13,7 +14,7 @@ dotenv.config();
 // as it creates the db as a side effect.
 import { storage } from "./libs/sqlite";
 
-const cache = new Cache();
+const cache = new Cache(config.wikiApiUrl, config.userAgent);
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],

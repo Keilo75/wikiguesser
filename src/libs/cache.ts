@@ -10,6 +10,14 @@ type CacheState = {
 export class Cache {
   private cache: CacheState | null = null;
 
+  private url: string;
+  private userAgent: string;
+
+  constructor(url: string, userAgent: string) {
+    this.url = url;
+    this.userAgent = userAgent;
+  }
+
   public async getGame(guildId: string | null): Promise<Game> {
     if (this.cache !== null && guildId !== null) {
       if (!this.cache.guilds.has(guildId)) {
@@ -20,7 +28,8 @@ export class Cache {
     }
 
     Logger.log(`Fetching game for guild ${guildId}.`);
-    const game = await createGame();
+    const game = await createGame(this.url, this.userAgent);
+    Logger.debug("Game", game);
 
     // Reset cache, as a new game was created
     this.cache = {

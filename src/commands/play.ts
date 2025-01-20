@@ -9,6 +9,6 @@ export const play: Command = {
     .setDescription(t("commands.play")),
   execute: async ({ interaction, cache }) => {
     const game = await cache.getGame(interaction.guildId);
-    await interaction.reply(JSON.stringify(game));
+    await interaction.reply("xd");
   },
 };
