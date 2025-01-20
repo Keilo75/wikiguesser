@@ -7,7 +7,8 @@ export const play: Command = {
   data: new SlashCommandBuilder()
     .setName("play")
     .setDescription(t("commands.play")),
-  execute: async ({ interaction }) => {
-    await interaction.reply("pong!");
+  execute: async ({ interaction, cache }) => {
+    const game = await cache.getGame(interaction.guildId);
+    await interaction.reply(JSON.stringify(game));
   },
 };

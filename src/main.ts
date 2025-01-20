@@ -5,10 +5,15 @@ import dotenv from "dotenv";
 import { t } from "i18next";
 
 import { commands } from "./commands";
+import { Cache } from "./libs/cache";
 import { Logger } from "./libs/logger";
 
 dotenv.config();
+// This import must happen after dotenv
+// as it creates the db as a side effect.
 import { storage } from "./libs/sqlite";
+
+const cache = new Cache();
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -38,7 +43,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   try {
-    await command.execute({ interaction, client, storage });
+    await command.execute({ interaction, client, storage, cache });
   } catch (err) {
     Logger.error(`Error while executing ${commandName}.`, err);
 
