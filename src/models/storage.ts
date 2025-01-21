@@ -13,6 +13,7 @@ export type StorageUserStats = {
 
 export class UserStatsUpdater {
   public stats: UserStats;
+
   constructor(id: string, stats: UserStats | null) {
     this.stats = stats || {
       id,
@@ -26,8 +27,23 @@ export class UserStatsUpdater {
 
   public addIncorrectGuess(): UserStats {
     this.stats.gameCount++;
+
     this.stats.incorrectGuesses++;
     this.stats.currentStreak = 0;
+
+    return this.stats;
+  }
+
+  public addCorrectGuess(): UserStats {
+    this.stats.gameCount++;
+
+    this.stats.correctGuesses++;
+    this.stats.currentStreak++;
+    this.stats.highestStreak = Math.max(
+      this.stats.currentStreak,
+      this.stats.highestStreak
+    );
+
     return this.stats;
   }
 }

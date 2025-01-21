@@ -55,16 +55,16 @@ export const play: Command = {
       components: [row],
     });
 
+    const description = t("play.correct-answer", {
+      answer: game.correctOption,
+      answerUrl: game.correctOptionUrl,
+      extract: game.originalText,
+    });
+
     const errorEmbed = new EmbedBuilder()
       .setFooter(footer)
       .setColor(Colors.Red)
-      .setDescription(
-        t("error.description", {
-          answer: game.correctOption,
-          answerUrl: game.correctOptionUrl,
-          extract: game.originalText,
-        })
-      );
+      .setDescription(description);
 
     try {
       const response = await message.awaitMessageComponent({
@@ -74,17 +74,29 @@ export const play: Command = {
       });
 
       if (response.customId === game.correctOption) {
-        // TODO: Correct
+        const updatedStats = userStatsUpdater.addCorrectGuess();
+
+        const correctEmbed = new EmbedBuilder()
+          .setTitle(t("play.correct"))
+          .setDescription(description)
+          .setColor(Colors.Green)
+          .addFields({
+            name: t("user.current-streak"),
+            value: updatedStats.currentStreak.toString(),
+          });
+
+        await message.edit({ embeds: [correctEmbed], components: [] });
+        await storage.updateUserStats(updatedStats);
       } else {
         await message.edit({
-          embeds: [errorEmbed.setTitle(t("error.incorrect"))],
+          embeds: [errorEmbed.setTitle(t("play.incorrect"))],
           components: [],
         });
         await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
       }
     } catch {
       await message.edit({
-        embeds: [errorEmbed.setTitle(t("error.timeout"))],
+        embeds: [errorEmbed.setTitle(t("play.timeout"))],
         components: [],
       });
       await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());

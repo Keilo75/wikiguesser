@@ -14,12 +14,11 @@
     "user-option": "User for which to show stats"
   },
   "play": {
-    "title": "Guess the Wikipedia article in {{seconds}} seconds."
-  },
-  "error": {
+    "title": "Guess the Wikipedia article in {{seconds}} seconds.",
+    "correct-answer": "The correct answer was [{{answer}}]({{answerUrl}}).\n\n{{extract}}",
     "timeout": "You didn't guess in time.",
     "incorrect": "Incorrect.",
-    "description": "The correct answer was [{{answer}}]({{answerUrl}}).\n\n{{extract}}"
+    "correct": "Correct!"
   },
   "user": {
     "title": "User Stats | {{user}}",
