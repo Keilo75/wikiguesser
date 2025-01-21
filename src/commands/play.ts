@@ -10,14 +10,21 @@ import {
 import { t } from "i18next";
 
 import { type Command } from "../models/command";
+import { UserStatsUpdater } from "../models/storage";
 
-const GUESS_TIME_SECONDS = 10;
+const GUESS_TIME_SECONDS = 1;
 
 export const play: Command = {
   data: new SlashCommandBuilder()
     .setName("play")
     .setDescription(t("commands.play")),
-  execute: async ({ interaction, cache }) => {
+  execute: async ({ interaction, cache, storage }) => {
+    const userStats = await storage.fetchUserStats(interaction.user.id);
+    const userStatsUpdater = new UserStatsUpdater(
+      interaction.user.id,
+      userStats
+    );
+
     const game = await cache.getGame(interaction.guildId);
     const footer = {
       text: interaction.user.displayName,
@@ -66,6 +73,7 @@ export const play: Command = {
         );
 
       await message.edit({ embeds: [timeoutEmbed], components: [] });
+      await storage.updateUserStats(userStatsUpdater.addWrongGuess());
     }
   },
 };
