@@ -16,6 +16,10 @@
   "play": {
     "title": "Guess the Wikipedia article in {{seconds}} seconds."
   },
+  "timeout": {
+    "title": "You didn't guess in time.",
+    "description": "The correct answer was [{{answer}}]({{answerUrl}}).\n\n{{extract}}"
+  },
   "about": {
     "title": "About",
     "description": "A discord bot which lets you guess the title of Wikipedia articles.",
