@@ -1,0 +1,4 @@
+{
+  "userAgent": "wikiguesser - https://github.com/Keilo75/wikiguesser",
+  "wikiApiUrl": "https://en.wikipedia.org/api/rest_v1/page/random/summary"
+}

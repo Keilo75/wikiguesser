@@ -118,5 +118,4 @@ dist
 .pnp.*
 
 # Custom
-config.json
 storage.db

@@ -32,6 +32,7 @@ DB_PATH=./storage.db
 ```
 
 4. Run `npm run scripts:prepare-storage` to create a sqlite database.
+5. If you're running a local copy, please consider changing the user agent in the `config.json` file.
 
 ## Scripts
 
