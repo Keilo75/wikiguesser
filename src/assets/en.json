@@ -1,0 +1,44 @@
+{
+  "status": "Diving into a rabbit hole...",
+  "messages": {
+    "error": ":x: **|** An unexpected error occured. Please try again.",
+    "ping": ":timer: **|** Current roundtrip latency is {{latency}}ms.",
+    "stats-bot": ":red_square: **|** Cannot retrieve information about bots.",
+    "stats-not-found": ":red_square: **|** The selected user has not played a game yet."
+  },
+  "commands": {
+    "about": "Get information about the bot.",
+    "ping": "Show the bot's current ping.",
+    "play": "Start a game.",
+    "user": "Get information about a user's stats.",
+    "user-option": "User for which to show stats"
+  },
+  "play": {
+    "title": "Guess the Wikipedia article in {{seconds}} seconds.",
+    "correct-answer": "The correct answer was [{{answer}}]({{answerUrl}}).\n\n{{extract}}",
+    "timeout": "You didn't guess in time.",
+    "incorrect": "Incorrect.",
+    "correct": "Correct!",
+    "play-again": "Play Again"
+  },
+  "user": {
+    "title": "User Stats | {{user}}",
+    "game-count": "Game Count",
+    "correct-guesses": "Correct Guesses",
+    "incorrect-guesses": "Incorrect Guesses",
+    "accuracy": "Accuracy",
+    "current-streak": "Current Streak",
+    "highest-streak": "Highest Streak"
+  },
+  "about": {
+    "title": "About",
+    "description": "A discord bot which lets you guess the title of Wikipedia articles.",
+    "source-code": "Source Code",
+    "github": "[GitHub](https://github.com/Keilo75/admiral-bot)",
+    "user-count": "User Count",
+    "footer": "Made by Keilo75"
+  },
+  "format": {
+    "percentage": "{{percentage, number(maximumFractionDigits:1;style:percent)}}"
+  }
+}

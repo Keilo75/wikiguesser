@@ -4,8 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node index.ts"
+    "start": "ts-node src/main.ts",
+    "dev": "nodemon src/main.ts",
+    "lint": "eslint .",
+    "test": "vitest",
+    "scripts:register-commands:dev": "cross-env MODE=dev ts-node src/scripts/register-commands.ts",
+    "scripts:register-commands:prod": "cross-env MODE=prod ts-node src/scripts/register-commands.ts",
+    "scripts:delete-commands:dev": "cross-env DELETE=TRUE MODE=dev ts-node src/scripts/register-commands.ts",
+    "scripts:delete-commands:prod": "cross-env DELETE=TRUE MODE=prod ts-node src/scripts/register-commands.ts",
+    "scripts:prepare-storage": "ts-node src/scripts/prepare-storage.ts"
   },
   "repository": {
     "type": "git",
@@ -18,15 +25,26 @@
     "url": "https://github.com/Keilo75/wikiguesser/issues"
   },
   "homepage": "https://github.com/Keilo75/wikiguesser#readme",
-  "dependencies": {
-    "chalk": "^4.1.1",
-    "discord.js": "^13.0.0-dev.1816a93b1b1b2bae47e8651e76fa53699de8421d",
-    "mongoose": "^5.12.14",
-    "node-fetch": "^2.6.1"
-  },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.10",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.3.2"
+    "@eslint/js": "^9.8.0",
+    "@types/better-sqlite3": "^7.6.12",
+    "@vitest/ui": "^2.0.5",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.8.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^15.9.0",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.0.1",
+    "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "@fast-csv/parse": "^5.0.0",
+    "better-sqlite3": "^11.8.1",
+    "chalk": "^4.1.2",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "i18next": "^23.12.2"
   }
 }

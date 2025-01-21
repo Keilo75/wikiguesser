@@ -119,3 +119,4 @@ dist
 
 # Custom
 config.json
+storage.db
