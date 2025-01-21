@@ -20,11 +20,23 @@
     "title": "You didn't guess in time.",
     "description": "The correct answer was [{{answer}}]({{answerUrl}}).\n\n{{extract}}"
   },
+  "user": {
+    "title": "User Stats | {{user}}",
+    "game-count": "Game Count",
+    "correct-guesses": "Correct Guesses",
+    "wrong-guesses": "Wrong Guesses",
+    "accuracy": "Accuracy",
+    "current-streak": "Current Streak",
+    "highest-streak": "Highest Streak"
+  },
   "about": {
     "title": "About",
     "description": "A discord bot which lets you guess the title of Wikipedia articles.",
     "source-code": "Source Code",
     "github": "[GitHub](https://github.com/Keilo75/admiral-bot)",
     "footer": "Made by Keilo75"
+  },
+  "format": {
+    "percentage": "{{percentage, number(maximumFractionDigits:1;style:percent)}}"
   }
 }

@@ -18,7 +18,7 @@ const result = db
   .prepare(
     `
   CREATE TABLE user (
-    ID varchar(255),
+    ID varchar(255) NOT NULL PRIMARY KEY,
     GameCount int,
     CorrectGuesses int,
     WrongGuesses int,
