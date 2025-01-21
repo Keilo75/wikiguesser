@@ -42,19 +42,29 @@ export const play: Command = {
       .setDescription(game.censoredText)
       .setFooter(footer);
 
-    const row =
+    const playRow =
       new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-        game.options.map((opt) =>
+        game.options.map(({ title }) =>
           new ButtonBuilder()
-            .setCustomId(opt)
+            .setCustomId(title)
             .setStyle(ButtonStyle.Primary)
-            .setLabel(opt)
+            .setLabel(title)
+        )
+      );
+
+    const linkRow =
+      new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+        game.options.map(({ title, url }) =>
+          new ButtonBuilder()
+            .setLabel(title)
+            .setStyle(ButtonStyle.Link)
+            .setURL(url)
         )
       );
 
     const message = await interaction.editReply({
       embeds: [embed],
-      components: [row],
+      components: [playRow],
     });
 
     try {
@@ -69,20 +79,20 @@ export const play: Command = {
 
         await message.edit({
           embeds: [createSuccessEmbed(interaction, game, updatedStats)],
-          components: [],
+          components: [linkRow],
         });
         await storage.updateUserStats(updatedStats);
       } else {
         await message.edit({
           embeds: [createErrorEmbed("incorrect", interaction, game)],
-          components: [],
+          components: [linkRow],
         });
         await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
       }
     } catch {
       await message.edit({
         embeds: [createErrorEmbed("timeout", interaction, game)],
-        components: [],
+        components: [linkRow],
       });
       await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
     }

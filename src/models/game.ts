@@ -3,5 +3,5 @@ export type Game = {
   originalText: string;
   correctOption: string;
   correctOptionUrl: string;
-  options: string[];
+  options: { title: string; url: string }[];
 };

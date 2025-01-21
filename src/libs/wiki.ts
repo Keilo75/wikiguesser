@@ -26,7 +26,10 @@ export async function createGame(
     censoredText: censorExtract(correctResponse.title, correctResponse.extract),
     correctOption: correctResponse.title,
     correctOptionUrl: correctResponse.content_urls.desktop.page,
-    options: responses.map((r) => r.title),
+    options: responses.map((r) => ({
+      title: r.title,
+      url: r.content_urls.desktop.page,
+    })),
   };
 }
 
