@@ -1,5 +1,6 @@
 import type { ApiResponse } from "../models/api";
 import type { Game } from "../models/game";
+import { Logger } from "./logger";
 import { getRandomElementFromArray } from "./random";
 
 export async function createGame(
@@ -19,6 +20,8 @@ export async function createGame(
   const responses = (await Promise.all(promises)).filter(
     (r) => r.title !== undefined
   );
+
+  Logger.debug("API Responses", responses);
   const correctResponse = getRandomElementFromArray(responses);
 
   return {
