@@ -2,9 +2,12 @@ import type { Game } from "../models/game";
 import { Logger } from "./logger";
 import { createGame } from "./wiki";
 
+const MAX_CACHE_MS = 10_000;
+
 type CacheState = {
   game: Game;
   guilds: Set<string>;
+  timestamp: number;
 };
 
 export class Cache {
@@ -20,7 +23,10 @@ export class Cache {
 
   public async getGame(guildId: string | null): Promise<Game> {
     if (this.cache !== null && guildId !== null) {
-      if (!this.cache.guilds.has(guildId)) {
+      if (
+        !this.cache.guilds.has(guildId) &&
+        Date.now() - this.cache.timestamp < MAX_CACHE_MS
+      ) {
         Logger.log(`Reading game for guild ${guildId} from cache.`);
         this.cache.guilds.add(guildId);
         return this.cache.game;
@@ -35,6 +41,7 @@ export class Cache {
     this.cache = {
       game,
       guilds: guildId ? new Set([guildId]) : new Set(),
+      timestamp: Date.now(),
     };
 
     return game;
