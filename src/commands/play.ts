@@ -5,13 +5,15 @@ import {
   Colors,
   ComponentType,
   EmbedBuilder,
+  type Interaction,
   type MessageActionRowComponentBuilder,
   SlashCommandBuilder,
 } from "discord.js";
 import { t } from "i18next";
 
 import { type Command } from "../models/command";
-import { UserStatsUpdater } from "../models/storage";
+import type { Game } from "../models/game";
+import { type UserStats, UserStatsUpdater } from "../models/storage";
 
 const GUESS_TIME_SECONDS = 10;
 
@@ -40,33 +42,20 @@ export const play: Command = {
       .setDescription(game.censoredText)
       .setFooter(footer);
 
-    const buttons = game.options.map((opt) =>
-      new ButtonBuilder()
-        .setCustomId(opt)
-        .setStyle(ButtonStyle.Primary)
-        .setLabel(opt)
-    );
-
     const row =
       new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-        buttons
+        game.options.map((opt) =>
+          new ButtonBuilder()
+            .setCustomId(opt)
+            .setStyle(ButtonStyle.Primary)
+            .setLabel(opt)
+        )
       );
 
     const message = await interaction.editReply({
       embeds: [embed],
       components: [row],
     });
-
-    const description = t("play.correct-answer", {
-      answer: game.correctOption,
-      answerUrl: game.correctOptionUrl,
-      extract: game.originalText,
-    });
-
-    const errorEmbed = new EmbedBuilder()
-      .setFooter(footer)
-      .setColor(Colors.Red)
-      .setDescription(description);
 
     try {
       const response = await message.awaitMessageComponent({
@@ -78,30 +67,70 @@ export const play: Command = {
       if (response.customId === game.correctOption) {
         const updatedStats = userStatsUpdater.addCorrectGuess();
 
-        const correctEmbed = new EmbedBuilder()
-          .setTitle(t("play.correct"))
-          .setDescription(description)
-          .setColor(Colors.Green)
-          .addFields({
-            name: t("user.current-streak"),
-            value: updatedStats.currentStreak.toString(),
-          });
-
-        await message.edit({ embeds: [correctEmbed], components: [] });
+        await message.edit({
+          embeds: [createSuccessEmbed(interaction, game, updatedStats)],
+          components: [],
+        });
         await storage.updateUserStats(updatedStats);
       } else {
         await message.edit({
-          embeds: [errorEmbed.setTitle(t("play.incorrect"))],
+          embeds: [createErrorEmbed("incorrect", interaction, game)],
           components: [],
         });
         await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
       }
     } catch {
       await message.edit({
-        embeds: [errorEmbed.setTitle(t("play.timeout"))],
+        embeds: [createErrorEmbed("timeout", interaction, game)],
         components: [],
       });
       await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
     }
   },
 };
+
+function createSuccessEmbed(
+  interaction: Interaction,
+  game: Game,
+  updatedStats: UserStats
+): EmbedBuilder {
+  const description = t("play.correct-answer", {
+    answer: game.correctOption,
+    answerUrl: game.correctOptionUrl,
+    extract: game.originalText,
+  });
+
+  return new EmbedBuilder()
+    .setTitle(t("play.correct"))
+    .setDescription(description)
+    .setColor(Colors.Green)
+    .addFields({
+      name: t("user.current-streak"),
+      value: updatedStats.currentStreak.toString(),
+    })
+    .setFooter({
+      text: interaction.user.displayName,
+      iconURL: interaction.user.displayAvatarURL({ forceStatic: true }),
+    });
+}
+
+function createErrorEmbed(
+  reason: "timeout" | "incorrect",
+  interaction: Interaction,
+  game: Game
+): EmbedBuilder {
+  const description = t("play.correct-answer", {
+    answer: game.correctOption,
+    answerUrl: game.correctOptionUrl,
+    extract: game.originalText,
+  });
+
+  return new EmbedBuilder()
+    .setColor(Colors.Red)
+    .setDescription(description)
+    .setTitle(t(`play.${reason}`))
+    .setFooter({
+      text: interaction.user.displayName,
+      iconURL: interaction.user.displayAvatarURL({ forceStatic: true }),
+    });
+}

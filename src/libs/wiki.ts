@@ -16,7 +16,9 @@ export async function createGame(
       )
   );
 
-  const responses = await Promise.all(promises);
+  const responses = (await Promise.all(promises)).filter(
+    (r) => r.title !== undefined
+  );
   const correctResponse = getRandomElementFromArray(responses);
 
   return {

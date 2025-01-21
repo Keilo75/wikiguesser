@@ -1,7 +1,7 @@
 {
   "status": "Diving into a rabbit hole...",
   "messages": {
-    "error": ":x: **|** An unexpected error occured. Please check the logs for details.",
+    "error": ":x: **|** An unexpected error occured. Please try again.",
     "ping": ":timer: **|** Current roundtrip latency is {{latency}}ms.",
     "stats-bot": ":red_square: **|** Cannot retrieve information about bots.",
     "stats-not-found": ":red_square: **|** The selected user has not played a game yet."
