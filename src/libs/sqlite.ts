@@ -41,4 +41,16 @@ export const storage: Storage = {
       `
     ).run(stats);
   },
+
+  fetchUserCount: async () => {
+    Logger.log("Fetching user count.");
+    const userCount = db
+      .prepare<unknown[], { count: number }>(
+        "SELECT Count(ID) as count FROM user"
+      )
+      .get();
+    Logger.debug("Database Response", userCount);
+
+    return userCount?.count || 0;
+  },
 };

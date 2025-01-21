@@ -51,4 +51,5 @@ export class UserStatsUpdater {
 export type Storage = {
   fetchUserStats: (id: string) => Promise<UserStats | null>;
   updateUserStats: (stats: UserStats) => Promise<void>;
+  fetchUserCount: () => Promise<number>;
 };
