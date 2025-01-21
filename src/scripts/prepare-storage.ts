@@ -21,7 +21,7 @@ const result = db
     ID varchar(255) NOT NULL PRIMARY KEY,
     GameCount int,
     CorrectGuesses int,
-    WrongGuesses int,
+    IncorrectGuesses int,
     CurrentStreak int,
     HighestStreak int
   );`

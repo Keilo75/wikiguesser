@@ -2,7 +2,7 @@ export type UserStats = {
   id: string;
   gameCount: number;
   correctGuesses: number;
-  wrongGuesses: number;
+  incorrectGuesses: number;
   currentStreak: number;
   highestStreak: number;
 };
@@ -18,15 +18,15 @@ export class UserStatsUpdater {
       id,
       gameCount: 0,
       correctGuesses: 0,
-      wrongGuesses: 0,
+      incorrectGuesses: 0,
       currentStreak: 0,
       highestStreak: 0,
     };
   }
 
-  public addWrongGuess(): UserStats {
+  public addIncorrectGuess(): UserStats {
     this.stats.gameCount++;
-    this.stats.wrongGuesses++;
+    this.stats.incorrectGuesses++;
     this.stats.currentStreak = 0;
     return this.stats;
   }

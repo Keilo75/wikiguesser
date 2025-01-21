@@ -25,7 +25,7 @@
     "title": "User Stats | {{user}}",
     "game-count": "Game Count",
     "correct-guesses": "Correct Guesses",
-    "wrong-guesses": "Wrong Guesses",
+    "incorrect-guesses": "Incorrect Guesses",
     "accuracy": "Accuracy",
     "current-streak": "Current Streak",
     "highest-streak": "Highest Streak"

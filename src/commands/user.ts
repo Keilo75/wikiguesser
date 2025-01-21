@@ -42,8 +42,8 @@ export const user: Command = {
           inline: true,
         },
         {
-          name: t("user.wrong-guesses"),
-          value: stats.wrongGuesses.toString(),
+          name: t("user.incorrect-guesses"),
+          value: stats.incorrectGuesses.toString(),
           inline: true,
         },
         {

@@ -75,19 +75,19 @@ export const play: Command = {
 
       if (response.customId === game.correctOption) {
         // TODO: Correct
-        // TODO: Rename wrong to incorrect
       } else {
         await message.edit({
           embeds: [errorEmbed.setTitle(t("error.incorrect"))],
           components: [],
         });
+        await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
       }
     } catch {
       await message.edit({
         embeds: [errorEmbed.setTitle(t("error.timeout"))],
         components: [],
       });
-      await storage.updateUserStats(userStatsUpdater.addWrongGuess());
+      await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
     }
   },
 };

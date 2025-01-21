@@ -25,7 +25,7 @@ export const storage: Storage = {
       id,
       gameCount: result.GameCount,
       correctGuesses: result.CorrectGuesses,
-      wrongGuesses: result.WrongGuesses,
+      incorrectGuesses: result.IncorrectGuesses,
       currentStreak: result.CurrentStreak,
       highestStreak: result.HighestStreak,
     };
@@ -36,8 +36,8 @@ export const storage: Storage = {
 
     db.prepare(
       `
-      INSERT OR REPLACE INTO user (ID, GameCount, CorrectGuesses, WrongGuesses, CurrentStreak, HighestStreak)
-      VALUES (@id, @gameCount, @correctGuesses, @wrongGuesses, @currentStreak, @highestStreak)
+      INSERT OR REPLACE INTO user (ID, GameCount, CorrectGuesses, IncorrectGuesses, CurrentStreak, HighestStreak)
+      VALUES (@id, @gameCount, @correctGuesses, @incorrectGuesses, @currentStreak, @highestStreak)
       `
     ).run(stats);
   },
