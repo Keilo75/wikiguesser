@@ -77,14 +77,14 @@ export const play: Command = {
       if (response.customId === game.correctOption) {
         const updatedStats = userStatsUpdater.addCorrectGuess();
 
-        await message.edit({
-          embeds: [createSuccessEmbed(interaction, game, updatedStats)],
+        await response.editReply({
+          embeds: [createSuccessEmbed(response, game, updatedStats)],
           components: [linkRow],
         });
         await storage.updateUserStats(updatedStats);
       } else {
-        await message.edit({
-          embeds: [createErrorEmbed("incorrect", interaction, game)],
+        await response.editReply({
+          embeds: [createErrorEmbed("incorrect", response, game)],
           components: [linkRow],
         });
         await storage.updateUserStats(userStatsUpdater.addIncorrectGuess());
