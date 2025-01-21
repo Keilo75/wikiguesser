@@ -16,8 +16,9 @@
   "play": {
     "title": "Guess the Wikipedia article in {{seconds}} seconds."
   },
-  "timeout": {
-    "title": "You didn't guess in time.",
+  "error": {
+    "timeout": "You didn't guess in time.",
+    "incorrect": "Incorrect.",
     "description": "The correct answer was [{{answer}}]({{answerUrl}}).\n\n{{extract}}"
   },
   "user": {

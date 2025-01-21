@@ -3,6 +3,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   Colors,
+  ComponentType,
   EmbedBuilder,
   type MessageActionRowComponentBuilder,
   SlashCommandBuilder,
@@ -12,7 +13,7 @@ import { t } from "i18next";
 import { type Command } from "../models/command";
 import { UserStatsUpdater } from "../models/storage";
 
-const GUESS_TIME_SECONDS = 1;
+const GUESS_TIME_SECONDS = 10;
 
 export const play: Command = {
   data: new SlashCommandBuilder()
@@ -54,25 +55,38 @@ export const play: Command = {
       components: [row],
     });
 
+    const errorEmbed = new EmbedBuilder()
+      .setFooter(footer)
+      .setColor(Colors.Red)
+      .setDescription(
+        t("error.description", {
+          answer: game.correctOption,
+          answerUrl: game.correctOptionUrl,
+          extract: game.originalText,
+        })
+      );
+
     try {
-      await message.awaitMessageComponent({
+      const response = await message.awaitMessageComponent({
         filter: (i) => i.user.id === interaction.user.id,
+        componentType: ComponentType.Button,
         time: GUESS_TIME_SECONDS * 1000,
       });
-    } catch {
-      const timeoutEmbed = new EmbedBuilder()
-        .setTitle(t("timeout.title"))
-        .setFooter(footer)
-        .setColor(Colors.Red)
-        .setDescription(
-          t("timeout.description", {
-            answer: game.correctOption,
-            answerUrl: game.correctOptionUrl,
-            extract: game.originalText,
-          })
-        );
 
-      await message.edit({ embeds: [timeoutEmbed], components: [] });
+      if (response.customId === game.correctOption) {
+        // TODO: Correct
+        // TODO: Rename wrong to incorrect
+      } else {
+        await message.edit({
+          embeds: [errorEmbed.setTitle(t("error.incorrect"))],
+          components: [],
+        });
+      }
+    } catch {
+      await message.edit({
+        embeds: [errorEmbed.setTitle(t("error.timeout"))],
+        components: [],
+      });
       await storage.updateUserStats(userStatsUpdater.addWrongGuess());
     }
   },
