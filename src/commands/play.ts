@@ -20,6 +20,8 @@ export const play: Command = {
     .setName("play")
     .setDescription(t("commands.play")),
   execute: async ({ interaction, cache, storage }) => {
+    await interaction.deferReply();
+
     const userStats = await storage.fetchUserStats(interaction.user.id);
     const userStatsUpdater = new UserStatsUpdater(
       interaction.user.id,
@@ -50,7 +52,7 @@ export const play: Command = {
         buttons
       );
 
-    const message = await interaction.reply({
+    const message = await interaction.editReply({
       embeds: [embed],
       components: [row],
     });

@@ -18,7 +18,8 @@
     "correct-answer": "The correct answer was [{{answer}}]({{answerUrl}}).\n\n{{extract}}",
     "timeout": "You didn't guess in time.",
     "incorrect": "Incorrect.",
-    "correct": "Correct!"
+    "correct": "Correct!",
+    "play-again": "Play Again"
   },
   "user": {
     "title": "User Stats | {{user}}",

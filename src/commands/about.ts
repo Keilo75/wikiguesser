@@ -17,3 +17,5 @@ export const about: Command = {
     await interaction.reply({ embeds: [embed] });
   },
 };
+
+// TODO: Show user count
